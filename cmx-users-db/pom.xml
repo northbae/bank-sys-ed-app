@@ -40,7 +40,7 @@
                 <version>${liquibase-core.version}</version>
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5432/bank-sys?currentSchema=cmx_users</url>
+                    <url>jdbc:postgresql://localhost:5432/bank-sys?currentSchema=osu_cmx_users</url>
                     <username>sys</username>
                     <password>pass</password>
                     <changeLogFile>db-changelog_main.xml</changeLogFile>

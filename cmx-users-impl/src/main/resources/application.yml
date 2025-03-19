@@ -4,14 +4,14 @@ spring:
   application:
     name: CmxUsers
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank-sys?currentSchema=cmx_users
+    url: jdbc:postgresql://localhost:5432/bank-sys?currentSchema=osu_cmx_users
     username: sys
     password: pass
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: db-changelog_main.xml
     enabled: true
-    url: jdbc:postgresql://localhost:5432/bank-sys?currentSchema=cmx_users
+    url: jdbc:postgresql://localhost:5432/bank-sys?currentSchema=osu_cmx_users
     user: sys
     password: pass
   jpa:
