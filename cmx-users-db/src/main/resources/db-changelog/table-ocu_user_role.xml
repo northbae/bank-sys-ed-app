@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-ocu_user_role" author="Lena">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ocu_user_role"/>
+            </not>
+        </preConditions>
+        <createTable tableName="ocu_user_role">
+            <column name="user_login" type="varchar(255)">
+                <constraints primaryKey="true" foreignKeyName="user_role_id_user_id_fk" references="ocu_user(login)" deleteCascade="true"/>
+            </column>
+            <column name="role_name" type="varchar(255)">
+                <constraints primaryKey="true" foreignKeyName="user_role_id_role_id_fk" references="ocu_role(name)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
