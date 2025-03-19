@@ -1,0 +1,42 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-occ_card" author="Lena">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="occ_card"/>
+            </not>
+        </preConditions>
+        <createTable tableName="occ_card">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="number" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="char(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cardholder" type="varchar(100)"/>
+            <column name="open_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="close_date" type="date"/>
+            <column name="is_blocked" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_status" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pay_system_code" type="uuid">
+                <constraints nullable="false" foreignKeyName="occ_card_id_pay_system_id" references="occ_pay_system(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
