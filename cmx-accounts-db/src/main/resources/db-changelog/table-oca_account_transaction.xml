@@ -1,0 +1,39 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-oca_account_transaction" author="Lena">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="oca_account_transaction"/>
+            </not>
+        </preConditions>
+        <createTable tableName="oca_account_transaction">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="payer_account" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payee_account" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sum" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_inner" type="boolean"/>
+        </createTable>
+        <createIndex indexName="idx_payer_account" tableName="oca_account_transaction">
+            <column name="payer_account"/>
+        </createIndex>
+        <createIndex indexName="idx_payee_account" tableName="oca_account_transaction">
+            <column name="payee_account"/>
+        </createIndex>
+        <createIndex indexName="idx_payer_account_payee_account" tableName="oca_account_transaction">
+            <column name="payer_account"/>
+            <column name="payee_account"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
