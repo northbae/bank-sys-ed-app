@@ -4,16 +4,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="table-ocu_role" author="Lena">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
             <not>
                 <tableExists tableName="ocu_role"/>
             </not>
         </preConditions>
-        <createTable tableName="ocu_role">
-            <column name="name" type="varchar(255)">
+        <createTable tableName="ocu_role" remarks="Роли">
+            <column name="name" type="varchar(255)" remarks="Наименование роли">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="description" type="varchar(255)"/>
+            <column name="description" type="varchar(255)" remarks="Описание роли"/>
         </createTable>
     </changeSet>
 

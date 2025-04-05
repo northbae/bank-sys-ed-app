@@ -1,6 +1,12 @@
 package kz.osu.cinimex.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,10 +36,7 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "title")
-    private String title;
-
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "ocu_user_role",
                joinColumns = @JoinColumn(name = "user_login"),
                inverseJoinColumns = @JoinColumn(name = "role_name"))
