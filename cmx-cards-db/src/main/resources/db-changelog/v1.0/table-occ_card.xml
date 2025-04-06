@@ -1,0 +1,53 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-occ_card" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
+            <not>
+                <tableExists tableName="occ_card"/>
+            </not>
+        </preConditions>
+        <createTable tableName="occ_card" remarks="Карта">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()" remarks="Уникальный идентификатор">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="number" type="varchar(16)" remarks="Номер карты">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="char(4)" remarks="Тип карты">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cardholder" type="varchar(100)" remarks="Владелец карты"/>
+            <column name="open_date" type="date" remarks="Дата выпуска карты">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date" remarks="Дата окончания работы карты">
+                <constraints nullable="false"/>
+            </column>
+            <column name="close_date" type="date" remarks="Дата окончания карты"/>
+            <column name="is_blocked" type="boolean" remarks="Признак блокировки карты">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_status" type="varchar(10)" remarks="Текущий статус">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pay_system_code" type="uuid" remarks="Платежная система">
+                <constraints nullable="false" foreignKeyName="occ_card_id_pay_system_id" references="occ_pay_system(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-check-constraint-type-status" author="Lena">
+        <sql>
+            ALTER TABLE occ_card ADD CONSTRAINT check_type CHECK
+            (type in ('DEBT', 'CRED'));
+            ALTER TABLE occ_card ADD CONSTRAINT check_current_status CHECK
+            (current_status in
+            ('REQUESTED_BY_USER', 'REQUEST_SENT_TO_CFT', 'CHECKS_STARTED', 'CHECKS_COMPLETED',
+            'CHECKS_FAILED', 'REQUEST_REJECTED', 'REQUEST_REJECTED_BY_CFT', 'OPENED', 'BLOCKED', 'CLOSED'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

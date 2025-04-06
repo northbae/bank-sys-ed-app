@@ -4,20 +4,23 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="table-occ_pay_system" author="Lena">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
             <not>
                 <tableExists tableName="occ_pay_system"/>
             </not>
         </preConditions>
-        <createTable tableName="occ_pay_system">
-            <column name="code" type="varchar(10)">
+        <createTable tableName="occ_pay_system" remarks="Платежная система">
+            <column name="code" type="varchar(10)" remarks="Код платежной системы">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="description" type="varchar(255)"/>
-            <column name="priority" type="int">
+            <column name="description" type="varchar(255)" remarks="Описание платежной системы"/>
+            <column name="priority" type="int" remarks="Приоритет выбора">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="insert-values-occ-pay-system" author="Lena">
         <insert tableName="occ_pay_system">
             <column name="code" value="iucq"/>
             <column name="description" value="UnionPay Instant Issue"/>

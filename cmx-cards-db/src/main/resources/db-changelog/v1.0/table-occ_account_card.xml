@@ -4,17 +4,18 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="table-occ_account_card" author="Lena">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
             <not>
                 <tableExists tableName="occ_account_card"/>
             </not>
         </preConditions>
-        <createTable tableName="occ_account_card">
-            <column name="account_id" type="uuid" defaultValueComputed="gen_random_uuid()">
+        <createTable tableName="occ_account_card" remarks="Связь счета и карты">
+            <column name="account_id" type="uuid">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="card_id" type="uuid">
-                <constraints primaryKey="true" foreignKeyName="occ_account_id_card_id" references="occ_card(id)" deleteCascade="true"/>
+            <column name="card_id" type="uuid" remarks="Ссылка на occ_card.id">
+                <constraints primaryKey="true" foreignKeyName="occ_account_id_card_id"
+                             references="occ_card(id)" deleteCascade="true"/>
             </column>
         </createTable>
         <addUniqueConstraint
