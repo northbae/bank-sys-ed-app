@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -24,22 +25,22 @@ public class Account {
     @Column(name = "currency", length = 3, nullable = false)
     private String currency;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "current_status", length = 30, nullable = false)
-    private String currentStatus;
+    private AccountStatus currentStatus;
 
     @Column(name = "sum")
-    private Double sum;
+    private BigDecimal sum;
 
     @Column(name = "open_date", nullable = false)
-    private Date openDate;
+    private LocalDate openDate;
 
     @Column(name = "close_date")
-    private Date closeDate;
+    private LocalDate closeDate;
 
     @Column(name = "is_blocked", nullable = false)
     private Boolean isBlocked;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_login", nullable = false)
-    private String user_login;
+    @Column(name = "user_login", nullable = false)
+    private String userLogin;
 }
