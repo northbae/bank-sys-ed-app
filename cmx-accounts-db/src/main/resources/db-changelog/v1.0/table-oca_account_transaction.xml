@@ -38,25 +38,22 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="create-oca-account-transaction-index-payee-account" author="Lena">
+    <changeSet id="create-oca-account-transaction-index" author="Lena">
         <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
-            <not>
-                <indexExists tableName="oca_account_transaction" indexName="idx_payee_account"
-                             columnNames="payee_account"/>
-            </not>
+            <or>
+                <not>
+                    <indexExists tableName="oca_account_transaction" indexName="idx_payee_account"
+                                 columnNames="payee_account"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account_transaction" indexName="idx_payer_account_payee_account"
+                                 columnNames="payer_account, payee_account"/>
+                </not>
+            </or>
         </preConditions>
         <createIndex indexName="idx_payee_account" tableName="oca_account_transaction">
             <column name="payee_account"/>
         </createIndex>
-    </changeSet>
-
-    <changeSet id="create-oca-account-transaction-index-payer-payee-account" author="Lena">
-        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
-            <not>
-                <indexExists tableName="oca_account_transaction" indexName="idx_payer_account_payee_account"
-                             columnNames="payer_account, payee_account"/>
-            </not>
-        </preConditions>
         <createIndex indexName="idx_payer_account_payee_account" tableName="oca_account_transaction">
             <column name="payer_account"/>
             <column name="payee_account"/>

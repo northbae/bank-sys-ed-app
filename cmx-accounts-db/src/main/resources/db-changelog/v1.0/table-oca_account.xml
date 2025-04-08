@@ -36,50 +36,40 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-oca-account-index-number" author="Lena">
+    <changeSet id="create-oca-account-index" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
+            <or>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_number"
+                                 columnNames="number"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_user_login"
+                                 columnNames="user_login"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_currency"
+                                 columnNames="currency"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_user_login_kind"
+                                 columnNames="user_login, currency"/>
+                </not>
+            </or>
+        </preConditions>
         <createIndex indexName="idx_number" tableName="oca_account">
             <column name="number"/>
         </createIndex>
-    </changeSet>
-
-    <changeSet id="create-oca-account-index-user-login" author="Lena">
-        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
-            <not>
-                <indexExists tableName="oca_account" indexName="idx_user_login"
-                             columnNames="user_login"/>
-            </not>
-        </preConditions>
         <createIndex indexName="idx_user_login" tableName="oca_account">
             <column name="user_login"/>
         </createIndex>
-    </changeSet>
-
-    <changeSet id="create-oca-account-index-currency" author="Lena">
-        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
-            <not>
-                <indexExists tableName="oca_account" indexName="idx_currency"
-                             columnNames="currency"/>
-            </not>
-        </preConditions>
         <createIndex indexName="idx_currency" tableName="oca_account">
             <column name="currency"/>
         </createIndex>
-    </changeSet>
-
-    <changeSet id="create-oca-account-index-user-login-kind" author="Lena">
-        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
-            <not>
-                <indexExists tableName="oca_account" indexName="idx_user_login_kind"
-                             columnNames="user_login, currency"/>
-            </not>
-        </preConditions>
         <createIndex indexName="idx_user_login_kind" tableName="oca_account">
             <column name="user_login"/>
             <column name="kind"/>
         </createIndex>
-    </changeSet>
-
-    <changeSet id="create-check-constraint-current-status" author="Lena">
         <sql>
             ALTER TABLE oca_account ADD CONSTRAINT check_current_status CHECK
             (current_status in
