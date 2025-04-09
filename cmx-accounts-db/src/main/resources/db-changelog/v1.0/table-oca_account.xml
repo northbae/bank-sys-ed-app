@@ -1,0 +1,81 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-oca_account" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
+            <not>
+                <tableExists tableName="oca_account"/>
+            </not>
+        </preConditions>
+        <createTable tableName="oca_account" remarks="Счет">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()" remarks="Уникальный идентификатор">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="number" type="varchar(20)" remarks="Номер счета">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="varchar(3)" remarks="Валюта счета">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_status" type="varchar(30)" remarks="Текущий статус счета">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sum" type="numeric" remarks="Баланс счета"/>
+            <column name="open_date" type="date" remarks="Дата открытия счета">
+                <constraints nullable="false"/>
+            </column>
+            <column name="close_date" type="date" remarks="Дата закрытия счета"/>
+            <column name="is_blocked" type="boolean" remarks="Является ли счет заблокированным">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_login" type="varchar(255)" remarks="Владалец счета ocu.user_login">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-oca-account-index" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
+            <or>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_number"
+                                 columnNames="number"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_user_login"
+                                 columnNames="user_login"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_currency"
+                                 columnNames="currency"/>
+                </not>
+                <not>
+                    <indexExists tableName="oca_account" indexName="idx_user_login_currency"
+                                 columnNames="user_login, currency"/>
+                </not>
+            </or>
+        </preConditions>
+        <createIndex indexName="idx_number" tableName="oca_account">
+            <column name="number"/>
+        </createIndex>
+        <createIndex indexName="idx_user_login" tableName="oca_account">
+            <column name="user_login"/>
+        </createIndex>
+        <createIndex indexName="idx_currency" tableName="oca_account">
+            <column name="currency"/>
+        </createIndex>
+        <createIndex indexName="idx_user_login_currency" tableName="oca_account">
+            <column name="user_login"/>
+            <column name="currency"/>
+        </createIndex>
+        <sql>
+            ALTER TABLE oca_account ADD CONSTRAINT check_current_status CHECK
+            (current_status in
+            ('REQUESTED_BY_USER', 'REQUEST_SENT_TO_CFT', 'CHECKS_STARTED', 'CHECKS_COMPLETED',
+            'CHECKS_FAILED', 'REQUEST_REJECTED', 'REQUEST_REJECTED_BY_CFT', 'OPENED', 'BLOCKED', 'CLOSED'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
