@@ -28,19 +28,11 @@
 
     <changeSet id="create-ocu-user-index" author="Lena">
         <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
-            <or>
-                <not>
-                    <indexExists tableName="ocu_user" indexName="idx_title" columnNames="title"/>
-                </not>
-                <not>
-                    <indexExists tableName="ocu_user" indexName="idx_last_name_first_name"
-                                 columnNames="last_name, first_name"/>
-                </not>
-            </or>
+            <not>
+                <indexExists tableName="ocu_user" indexName="idx_last_name_first_name"
+                  columnNames="last_name, first_name"/>
+            </not>
         </preConditions>
-        <createIndex indexName="idx_title" tableName="ocu_user">
-            <column name="title"/>
-        </createIndex>
         <createIndex indexName="idx_last_name_first_name" tableName="ocu_user">
             <column name="last_name"/>
             <column name="first_name"/>
