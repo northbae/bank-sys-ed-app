@@ -52,7 +52,7 @@
                                  columnNames="currency"/>
                 </not>
                 <not>
-                    <indexExists tableName="oca_account" indexName="idx_user_login_kind"
+                    <indexExists tableName="oca_account" indexName="idx_user_login_currency"
                                  columnNames="user_login, currency"/>
                 </not>
             </or>
@@ -66,9 +66,9 @@
         <createIndex indexName="idx_currency" tableName="oca_account">
             <column name="currency"/>
         </createIndex>
-        <createIndex indexName="idx_user_login_kind" tableName="oca_account">
+        <createIndex indexName="idx_user_login_currency" tableName="oca_account">
             <column name="user_login"/>
-            <column name="kind"/>
+            <column name="currency"/>
         </createIndex>
         <sql>
             ALTER TABLE oca_account ADD CONSTRAINT check_current_status CHECK
