@@ -6,9 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -46,11 +43,12 @@ public class Card {
     @Column(name = "current_status", length = 10, nullable = false)
     private AccountStatus currentStatus;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pay_system_code", nullable = false)
     private PaySystem paySystem;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private List<UUID> accounts = new ArrayList<>();
+    @JoinTable(name = "occ_account_card",
+            joinColumns = @JoinColumn(name = "card_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id"))
+    private UUID accountId;
 }

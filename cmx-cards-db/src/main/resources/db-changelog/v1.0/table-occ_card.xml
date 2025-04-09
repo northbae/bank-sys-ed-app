@@ -33,8 +33,8 @@
             <column name="current_status" type="varchar(10)" remarks="Текущий статус">
                 <constraints nullable="false"/>
             </column>
-            <column name="pay_system_code" type="uuid" remarks="Платежная система">
-                <constraints nullable="false" foreignKeyName="occ_card_id_pay_system_id" references="occ_pay_system(id)" deleteCascade="true"/>
+            <column name="pay_system_code" type="varchar(10)" remarks="Платежная система">
+                <constraints nullable="false" foreignKeyName="occ_card_pay_system_code" references="occ_pay_system(code)" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
