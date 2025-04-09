@@ -1,0 +1,70 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-occ_pay_system" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
+            <not>
+                <tableExists tableName="occ_pay_system"/>
+            </not>
+        </preConditions>
+        <createTable tableName="occ_pay_system" remarks="Платежная система">
+            <column name="code" type="varchar(10)" remarks="Код платежной системы">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="varchar(255)" remarks="Описание платежной системы"/>
+            <column name="priority" type="int" remarks="Приоритет выбора">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert-values-occ-pay-system" author="Lena">
+        <insert tableName="occ_pay_system">
+            <column name="code" value="iucq"/>
+            <column name="description" value="UnionPay Instant Issue"/>
+            <column name="priority" value="8"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="ucq"/>
+            <column name="description" value="UnionPay Classic (Q)"/>
+            <column name="priority" value="6"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="iucqat"/>
+            <column name="description" value="UnionPay Instant Issue (Амурский тигр)"/>
+            <column name="priority" value="7"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="imrsvk"/>
+            <column name="description" value="Карта МИР Моментального выпуска (SVK)"/>
+            <column name="priority" value="9"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="mrc"/>
+            <column name="description" value="Классическая карта МИР"/>
+            <column name="priority" value="1"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="mr_uc"/>
+            <column name="description" value="Карта МИР-UnionPay"/>
+            <column name="priority" value="4"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="imr_sv"/>
+            <column name="description" value="Карта МИР Моментального выпуска (SV)"/>
+            <column name="priority" value="3"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="imrc"/>
+            <column name="description" value="Карта МИР Моментального выпуска"/>
+            <column name="priority" value="2"/>
+        </insert>
+        <insert tableName="occ_pay_system">
+            <column name="code" value="imr_uc"/>
+            <column name="description" value="МИР-UnionPay Моментального выпуска"/>
+            <column name="priority" value="5"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

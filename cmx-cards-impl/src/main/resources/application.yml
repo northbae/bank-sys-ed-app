@@ -1,0 +1,20 @@
+server:
+  port:
+    8083
+spring:
+  application:
+    name: CmxCards
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bank-sys?currentSchema=osu_cmx_cards
+    username: sys
+    password: pass
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: db-changelog_main.xml
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/bank-sys?currentSchema=osu_cmx_cards
+    user: sys
+    password: pass
+  jpa:
+    hibernate:
+      ddl-auto: none
