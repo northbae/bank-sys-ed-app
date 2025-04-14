@@ -7,7 +7,6 @@ import jakarta.persistence.criteria.Root;
 import kz.osu.cinimex.entity.Role;
 import kz.osu.cinimex.entity.SearchCriteria;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 

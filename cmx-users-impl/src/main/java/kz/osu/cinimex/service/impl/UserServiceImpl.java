@@ -1,7 +1,5 @@
 package kz.osu.cinimex.service.impl;
 
-import static java.lang.String.format;
-
 import kz.osu.cinimex.dto.ChangeUserDto;
 import kz.osu.cinimex.dto.UserDto;
 import kz.osu.cinimex.entity.Role;
@@ -15,16 +13,14 @@ import kz.osu.cinimex.repository.UserRepository;
 import kz.osu.cinimex.service.RoleService;
 import kz.osu.cinimex.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,60 +35,52 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsById(userDto.getLogin())) {
             throw new EntryExistsException("Указанный пользователь уже существует");
         }
-        else {
-            List<String> roleNames = new ArrayList<>(userDto.getRoles());
-            if (roleNames.stream().allMatch(roleService::existsByName)) {
-                List<Role> foundRoles = roleService.getRolesByName(roleNames);
-                User user = userMapper.userDtoToUser(userDto);
-                user.setRoles(foundRoles);
-                userRepository.save(user);
-            }
-            else {
-                throw new NotFoundException("Указанные роли отсутствуют в бд");
-            }
+        List<Role> foundRoles = roleService.getRolesByName(userDto.getRoles());
+        if (userDto.getRoles().size() != foundRoles.size()) {
+            throw new NotFoundException("Указанные роли отсутствуют в бд");
         }
+        User user = userMapper.userDtoToUser(userDto);
+        user.setRoles(foundRoles);
+        userRepository.save(user);
+
     }
 
 
     @Override
     @Transactional
-    public UserDto changeUser(String login, ChangeUserDto changeUserDto) {
+    public Optional<UserDto> changeUser(String login, ChangeUserDto changeUserDto) {
         User user = userRepository.findById(login)
                 .orElseThrow(() -> new NotFoundException("Указанный пользователь не найден"));
-        List<String> roleNames = new ArrayList<>(changeUserDto.getRoles());
-        if (roleNames.stream().allMatch(roleService::existsByName)) {
-            List<Role> foundRoles = roleService.getRolesByName(roleNames);
-            User userNew = userMapper.changeUserDtoToUser(changeUserDto);
-            user.setFirstName(userNew.getFirstName());
-            user.setLastName(userNew.getLastName());
-            user.setEmail(userNew.getEmail());
-            user.setPhone(userNew.getPhone());
-            user.setRoles(foundRoles);
-            return userMapper.userToUserDto(userRepository.save(user));
-        } else {
+        List<Role> foundRoles = roleService.getRolesByName(changeUserDto.getRoles());
+        if (changeUserDto.getRoles().size() != foundRoles.size()) {
             throw new NotFoundException("Указанные роли отсутствуют в бд");
         }
+        User userNew = userMapper.changeUserDtoToUser(changeUserDto);
+        user.setFirstName(userNew.getFirstName());
+        user.setLastName(userNew.getLastName());
+        user.setEmail(userNew.getEmail());
+        user.setPhone(userNew.getPhone());
+        user.setRoles(foundRoles);
+        return Optional.of(userMapper.userToUserDto(userRepository.save(user)));
     }
 
 
     @Override
-    public UserDto getUserById(String login) {
-        return userMapper.userToUserDto(userRepository.findById(login)
-                .orElseThrow(() -> new NotFoundException(format("Пользователь с логином %s не найден", login))));
+    public Optional<UserDto> getUserById(String login) {
+        return userRepository.findById(login).map(userMapper::userToUserDto);
     }
 
 
     @Override
-    public PagedModel<UserDto> getAllUsers(Pageable pageable, String lastName, String firstName, String login) {
+    public Page<UserDto> getAllUsers(Pageable pageable, String lastName, String firstName, String login) {
         Specification<User> specificationLastName = new UserWithCriteriaSpecification(
                 new SearchCriteria("lastName", "=", lastName));
         Specification<User> specificationFirstName = new UserWithCriteriaSpecification(
                 new SearchCriteria("firstName", "=", firstName));
         Specification<User> specificationLogin = new UserWithCriteriaSpecification(
                 new SearchCriteria("login", "=", login));
-        return new PagedModel<>(
-                userRepository.findAll(Specification.where(specificationLastName).and(specificationFirstName).and(specificationLogin), pageable)
-                .map(userMapper::userToUserDto));
+        return userRepository.findAll(Specification.where(specificationLastName).and(specificationFirstName).and(specificationLogin), pageable)
+                .map(userMapper::userToUserDto);
     }
 
     @Override

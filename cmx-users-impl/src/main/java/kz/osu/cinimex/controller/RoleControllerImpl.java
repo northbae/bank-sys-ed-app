@@ -5,12 +5,8 @@ import kz.osu.cinimex.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +20,7 @@ public class RoleControllerImpl implements RoleController {
     }
 
     @Override
-    public ResponseEntity<PagedModel<RoleDto>> getAllRoles(Pageable pageable, String name, String description) {
+    public ResponseEntity<Page<RoleDto>> getAllRoles(Pageable pageable, String name, String description) {
         return ResponseEntity.ok(roleService.getAllRoles(pageable, name, description));
     }
 

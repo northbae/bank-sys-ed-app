@@ -2,11 +2,11 @@ package kz.osu.cinimex.controller;
 
 import kz.osu.cinimex.dto.ChangeUserDto;
 import kz.osu.cinimex.dto.UserDto;
+import kz.osu.cinimex.exception.NotFoundException;
 import kz.osu.cinimex.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,16 +24,16 @@ public class UserControllerImpl implements UserController{
 
     @Override
     public ResponseEntity<UserDto> changeUser(String login, ChangeUserDto changeUserDto) {
-        return ResponseEntity.ok(userService.changeUser(login, changeUserDto));
+        return ResponseEntity.ok(userService.changeUser(login, changeUserDto).orElseThrow(() -> new NotFoundException("Пользователь не сохранен")));
     }
 
     @Override
     public ResponseEntity<UserDto> getUserById(String login) {
-        return ResponseEntity.ok(userService.getUserById(login));
+        return ResponseEntity.ok(userService.getUserById(login).orElseThrow(() -> new NotFoundException("Пользователь не найден")));
     }
 
     @Override
-    public ResponseEntity<PagedModel<UserDto>> getAllUsers(Pageable pageable, String lastName, String firstName, String login) {
+    public ResponseEntity<Page<UserDto>> getAllUsers(Pageable pageable, String lastName, String firstName, String login) {
         return ResponseEntity.ok(userService.getAllUsers(pageable, lastName, firstName, login));
     }
 

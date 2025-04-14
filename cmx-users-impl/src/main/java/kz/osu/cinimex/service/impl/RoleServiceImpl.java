@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.config.SpringDataJacksonConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,22 +29,19 @@ public class RoleServiceImpl implements RoleService {
         if (roleRepository.existsById(roleDto.getName())) {
             throw new EntryExistsException("Указанная роль уже существует");
         }
-        else {
-            roleRepository.save(roleMapper.roleDtoToRole(roleDto));
-        }
+        roleRepository.save(roleMapper.roleDtoToRole(roleDto));
     }
 
     @Override
-    public PagedModel<RoleDto> getAllRoles(Pageable pageable, String name, String description) {
+    public Page<RoleDto> getAllRoles(Pageable pageable, String name, String description) {
         Specification<Role> specificationName = new RoleWithCriteriaSpecification(
                 new SearchCriteria("name", "=", name));
         Specification<Role> specificationDescription = new RoleWithCriteriaSpecification(
                 new SearchCriteria("description", "like", description));
         Specification<Role> specification = Specification.where(specificationName).and(specificationDescription);
 
-        return new PagedModel<>(
-                roleRepository.findAll(specification, pageable)
-                .map(roleMapper::roleToRoleDto));
+        return roleRepository.findAll(specification, pageable)
+                .map(roleMapper::roleToRoleDto);
     }
 
     @Override
@@ -56,13 +51,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public List<Role> getRolesByName(List<String> roleNames) {
+    public List<Role> getRolesByName(Iterable<String> roleNames) {
         return roleRepository.findAllById(roleNames);
-    }
-
-    @Override
-    @Transactional
-    public boolean existsByName(String name) {
-        return roleRepository.existsById(name);
     }
 }

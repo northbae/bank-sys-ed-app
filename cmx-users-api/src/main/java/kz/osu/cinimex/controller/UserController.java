@@ -14,7 +14,6 @@ import kz.osu.cinimex.dto.UserDto;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -56,7 +55,7 @@ public interface UserController {
     @PutMapping("/{login}")
     ResponseEntity<UserDto> changeUser(@PathVariable
                                     @Parameter(name = "login", description = "Логин пользователя") String login,
-                                    @Valid @RequestBody
+                                                @Valid @RequestBody
                                     @Parameter(name = "changeUser", description = "Информация об измененном пользователе") ChangeUserDto changeUserDto);
 
     @Operation(summary = "Получить данные пользователя по id")
@@ -79,10 +78,10 @@ public interface UserController {
                             schema = @Schema(implementation = RoleDto.class)) })
     })
     @GetMapping
-    ResponseEntity<PagedModel<UserDto>> getAllUsers(@ParameterObject Pageable pageable,
-                                                    @RequestParam(value = "lastName", required = false) String lastName,
-                                                    @RequestParam(value = "firstName", required = false) String firstName,
-                                                    @RequestParam(value = "login", required = false) String login);
+    ResponseEntity<Page<UserDto>> getAllUsers(@ParameterObject Pageable pageable,
+                                              @RequestParam(value = "lastName", required = false) String lastName,
+                                              @RequestParam(value = "firstName", required = false) String firstName,
+                                              @RequestParam(value = "login", required = false) String login);
 
 
     @Operation(summary = "Удалить пользователя")
