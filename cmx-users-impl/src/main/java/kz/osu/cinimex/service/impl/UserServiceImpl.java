@@ -74,11 +74,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDto> getAllUsers(Pageable pageable, String lastName, String firstName, String login) {
         Specification<User> specificationLastName = new UserWithCriteriaSpecification(
-                new SearchCriteria("lastName", "=", lastName));
+                new SearchCriteria("lastName", "like", lastName));
         Specification<User> specificationFirstName = new UserWithCriteriaSpecification(
-                new SearchCriteria("firstName", "=", firstName));
+                new SearchCriteria("firstName", "like", firstName));
         Specification<User> specificationLogin = new UserWithCriteriaSpecification(
-                new SearchCriteria("login", "=", login));
+                new SearchCriteria("login", "like", login));
         return userRepository.findAll(Specification.where(specificationLastName).and(specificationFirstName).and(specificationLogin), pageable)
                 .map(userMapper::userToUserDto);
     }

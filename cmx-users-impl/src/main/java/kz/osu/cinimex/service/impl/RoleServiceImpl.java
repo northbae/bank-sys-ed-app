@@ -35,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<RoleDto> getAllRoles(Pageable pageable, String name, String description) {
         Specification<Role> specificationName = new RoleWithCriteriaSpecification(
-                new SearchCriteria("name", "=", name));
+                new SearchCriteria("name", "like", name));
         Specification<Role> specificationDescription = new RoleWithCriteriaSpecification(
                 new SearchCriteria("description", "like", description));
         Specification<Role> specification = Specification.where(specificationName).and(specificationDescription);
