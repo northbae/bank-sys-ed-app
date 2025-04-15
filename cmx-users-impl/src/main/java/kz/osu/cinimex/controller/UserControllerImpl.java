@@ -29,7 +29,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     public ResponseEntity<UserDto> getUserById(String login) {
-        return ResponseEntity.ok(userService.getUserById(login).orElseThrow(() -> new NotFoundException("Пользователь не найден")));
+        return ResponseEntity.ok(userService.getUserById(login));
     }
 
     @Override

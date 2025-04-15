@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface UserService {
     void createUser(UserDto userDto);
     Optional<UserDto> changeUser(String login, ChangeUserDto changeUserDto);
-    Optional<UserDto> getUserById(String login);
+    UserDto getUserById(String login);
     Page<UserDto> getAllUsers(Pageable pageable, String lastName, String firstName, String login);
     void deleteUserById(String login);
 }

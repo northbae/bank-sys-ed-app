@@ -23,7 +23,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException notFoundException) {
-        return getResponse(notFoundException, HttpStatus.BAD_REQUEST, notFoundException.getMessage());
+        return getResponse(notFoundException, HttpStatus.NOT_FOUND, notFoundException.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -49,25 +49,23 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<UserDto> changeUser(String login, ChangeUserDto changeUserDto) {
-        User user = userRepository.findById(login)
-                .orElseThrow(() -> new NotFoundException("Указанный пользователь не найден"));
         List<Role> foundRoles = roleService.getRolesByName(changeUserDto.getRoles());
         if (changeUserDto.getRoles().size() != foundRoles.size()) {
             throw new NotFoundException("Указанные роли отсутствуют в бд");
         }
-        User userNew = userMapper.changeUserDtoToUser(changeUserDto);
-        user.setFirstName(userNew.getFirstName());
-        user.setLastName(userNew.getLastName());
-        user.setEmail(userNew.getEmail());
-        user.setPhone(userNew.getPhone());
-        user.setRoles(foundRoles);
-        return Optional.of(userMapper.userToUserDto(userRepository.save(user)));
+        return Optional.of(userRepository.findById(login)
+                .map(u -> userMapper.userChangesToUser(u, changeUserDto, foundRoles))
+                .map(userRepository::save)
+                .map(userMapper::userToUserDto)
+                .orElseThrow(() -> new NotFoundException("Указанный пользователь не найден")));
+
     }
 
 
     @Override
-    public Optional<UserDto> getUserById(String login) {
-        return userRepository.findById(login).map(userMapper::userToUserDto);
+    public UserDto getUserById(String login) {
+        return userRepository.findById(login).map(userMapper::userToUserDto)
+                .orElseThrow(() -> new NotFoundException("Указанный пользователь не найден"));
     }
 
 
