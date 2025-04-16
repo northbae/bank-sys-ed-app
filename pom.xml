@@ -31,6 +31,7 @@
         <liquibase-core.version>4.31.1</liquibase-core.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <springdoc.version>2.8.5</springdoc.version>
+        <statemachine.version>4.0.0</statemachine.version>
     </properties>
 
 </project>
