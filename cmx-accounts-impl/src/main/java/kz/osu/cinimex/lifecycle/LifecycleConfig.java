@@ -1,9 +1,10 @@
 package kz.osu.cinimex.lifecycle;
 
-import kz.osu.cinimex.actions.ChangeDocumentStatusAction;
-import org.springframework.context.annotation.Bean;
+import kz.osu.cinimex.entity.AccountEvent;
+import kz.osu.cinimex.entity.AccountState;
+import kz.osu.cinimex.lifecycle.actions.ChangeDocumentStatusAction;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -14,117 +15,114 @@ import java.util.EnumSet;
 
 @Configuration
 @EnableStateMachineFactory
-public class LifecycleConfig extends StateMachineConfigurerAdapter<State, Event> {
+@RequiredArgsConstructor
+public class LifecycleConfig extends StateMachineConfigurerAdapter<AccountState, AccountEvent> {
+
+    private final ChangeDocumentStatusAction changeDocumentStatusAction;
 
     @Override
-    public void configure(final StateMachineStateConfigurer<State, Event> states) throws Exception {
+    public void configure(final StateMachineStateConfigurer<AccountState, AccountEvent> states) throws Exception {
         states
                 .withStates()
-                .initial(State.REQUESTED_BY_USER)
-                .end(State.REQUEST_REJECTED)
-                .end(State.REQUEST_REJECTED_BY_CFT)
-                .end(State.BLOCKED)
-                .end(State.CLOSED)
-                .states(EnumSet.allOf(State.class));
+                .initial(AccountState.REQUESTED_BY_USER)
+                .end(AccountState.REQUEST_REJECTED)
+                .end(AccountState.REQUEST_REJECTED_BY_CFT)
+                .end(AccountState.BLOCKED)
+                .end(AccountState.CLOSED)
+                .states(EnumSet.allOf(AccountState.class));
     }
 
     @Override
-    public void configure(final StateMachineConfigurationConfigurer<State, Event> config) throws Exception {
+    public void configure(final StateMachineConfigurationConfigurer<AccountState, AccountEvent> config) throws Exception {
         config
                 .withConfiguration()
                 .autoStartup(true);
-                //.listener(new StateMachineApplicationListener());
     }
 
     @Override
-    public void configure(final StateMachineTransitionConfigurer<State, Event> transitions) throws Exception {
+    public void configure(final StateMachineTransitionConfigurer<AccountState, AccountEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                .source(State.REQUESTED_BY_USER)
-                .target(State.REQUEST_SENT_TO_CFT)
-                .event(Event.START_CHECKS)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.REQUESTED_BY_USER)
+                .target(AccountState.REQUEST_SENT_TO_CFT)
+                .event(AccountEvent.START_CHECKS)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.REQUEST_SENT_TO_CFT)
-                .target(State.CHECKS_STARTED)
-                .event(Event.REQUEST_RECEIVED)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.REQUEST_SENT_TO_CFT)
+                .target(AccountState.CHECKS_STARTED)
+                .event(AccountEvent.REQUEST_RECEIVED)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_STARTED)
-                .target(State.CHECKS_COMPLETED)
-                .event(Event.SUCCESS)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_STARTED)
+                .target(AccountState.CHECKS_COMPLETED)
+                .event(AccountEvent.SUCCESS)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_COMPLETED)
-                .target(State.OPENED)
-                .event(Event.OPEN)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_COMPLETED)
+                .target(AccountState.OPENED)
+                .event(AccountEvent.OPEN)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_COMPLETED)
-                .target(State.REQUEST_REJECTED)
-                .event(Event.USER_REJECT)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_COMPLETED)
+                .target(AccountState.REQUEST_REJECTED)
+                .event(AccountEvent.USER_REJECT)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_COMPLETED)
-                .target(State.REQUEST_SENT_TO_CFT)
-                .event(Event.CONTINUE)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_COMPLETED)
+                .target(AccountState.REQUEST_SENT_TO_CFT)
+                .event(AccountEvent.CONTINUE)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_STARTED)
-                .target(State.CHECKS_FAILED)
-                .event(Event.FAIL)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_STARTED)
+                .target(AccountState.CHECKS_FAILED)
+                .event(AccountEvent.FAIL)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_FAILED)
-                .target(State.REQUEST_SENT_TO_CFT)
-                .event(Event.START_CHECKS)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_FAILED)
+                .target(AccountState.REQUEST_SENT_TO_CFT)
+                .event(AccountEvent.START_CHECKS)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_FAILED)
-                .target(State.REQUEST_REJECTED)
-                .event(Event.USER_REJECT)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_FAILED)
+                .target(AccountState.REQUEST_REJECTED)
+                .event(AccountEvent.USER_REJECT)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_STARTED)
-                .target(State.REQUEST_REJECTED_BY_CFT)
-                .event(Event.REJECT)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_STARTED)
+                .target(AccountState.REQUEST_REJECTED_BY_CFT)
+                .event(AccountEvent.REJECT)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_STARTED)
-                .target(State.BLOCKED)
-                .event(Event.BLOCK)
-                .action(changeDocumentStatusAction())
+                .source(AccountState.CHECKS_STARTED)
+                .target(AccountState.BLOCKED)
+                .event(AccountEvent.BLOCK)
+                .action(changeDocumentStatusAction)
 
                 .and()
                 .withExternal()
-                .source(State.CHECKS_STARTED)
-                .target(State.CLOSED)
-                .event(Event.CLOSE)
-                .action(changeDocumentStatusAction());
-    }
-
-    @Bean
-    public Action<State, Event> changeDocumentStatusAction() {
-        return new ChangeDocumentStatusAction();
+                .source(AccountState.CHECKS_STARTED)
+                .target(AccountState.CLOSED)
+                .event(AccountEvent.CLOSE)
+                .action(changeDocumentStatusAction);
     }
 }

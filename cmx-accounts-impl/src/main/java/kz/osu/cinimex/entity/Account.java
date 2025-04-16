@@ -1,6 +1,11 @@
 package kz.osu.cinimex.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +32,7 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "current_status", length = 30, nullable = false)
-    private AccountStatus currentStatus;
+    private AccountState currentStatus;
 
     @Column(name = "sum")
     private BigDecimal sum;
