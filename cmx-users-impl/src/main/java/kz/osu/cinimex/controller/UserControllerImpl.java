@@ -2,7 +2,6 @@ package kz.osu.cinimex.controller;
 
 import kz.osu.cinimex.dto.ChangeUserDto;
 import kz.osu.cinimex.dto.UserDto;
-import kz.osu.cinimex.exception.NotFoundException;
 import kz.osu.cinimex.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +23,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     public ResponseEntity<UserDto> changeUser(String login, ChangeUserDto changeUserDto) {
-        return ResponseEntity.ok(userService.changeUser(login, changeUserDto).orElseThrow(() -> new NotFoundException("Пользователь не сохранен")));
+        return ResponseEntity.ok(userService.changeUser(login, changeUserDto));
     }
 
     @Override

@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,43 +41,33 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.userDtoToUser(userDto);
         user.setRoles(foundRoles);
         userRepository.save(user);
-
     }
-
 
     @Override
     @Transactional
-    public Optional<UserDto> changeUser(String login, ChangeUserDto changeUserDto) {
+    public UserDto changeUser(String login, ChangeUserDto changeUserDto) {
         List<Role> foundRoles = roleService.getRolesByName(changeUserDto.getRoles());
         if (changeUserDto.getRoles().size() != foundRoles.size()) {
             throw new NotFoundException("Указанные роли отсутствуют в бд");
         }
-        return Optional.of(userRepository.findById(login)
+        return userRepository.findById(login)
                 .map(u -> userMapper.userChangesToUser(u, changeUserDto, foundRoles))
                 .map(userRepository::save)
                 .map(userMapper::userToUserDto)
-                .orElseThrow(() -> new NotFoundException("Указанный пользователь не найден")));
-
-    }
-
-
-    @Override
-    public UserDto getUserById(String login) {
-        return userRepository.findById(login).map(userMapper::userToUserDto)
                 .orElseThrow(() -> new NotFoundException("Указанный пользователь не найден"));
     }
 
+    @Override
+    public UserDto getUserById(String login) {
+        return userRepository.findById(login).map(userMapper::userToUserDto).orElseThrow(() -> new NotFoundException("Указанный пользователь не найден"));
+    }
 
     @Override
     public Page<UserDto> getAllUsers(Pageable pageable, String lastName, String firstName, String login) {
-        Specification<User> specificationLastName = new UserWithCriteriaSpecification(
-                new SearchCriteria("lastName", "like", lastName));
-        Specification<User> specificationFirstName = new UserWithCriteriaSpecification(
-                new SearchCriteria("firstName", "like", firstName));
-        Specification<User> specificationLogin = new UserWithCriteriaSpecification(
-                new SearchCriteria("login", "like", login));
-        return userRepository.findAll(Specification.where(specificationLastName).and(specificationFirstName).and(specificationLogin), pageable)
-                .map(userMapper::userToUserDto);
+        Specification<User> specificationLastName = new UserWithCriteriaSpecification(new SearchCriteria("lastName", "like", lastName));
+        Specification<User> specificationFirstName = new UserWithCriteriaSpecification(new SearchCriteria("firstName", "like", firstName));
+        Specification<User> specificationLogin = new UserWithCriteriaSpecification(new SearchCriteria("login", "like", login));
+        return userRepository.findAll(Specification.where(specificationLastName).and(specificationFirstName).and(specificationLogin), pageable).map(userMapper::userToUserDto);
     }
 
     @Override
