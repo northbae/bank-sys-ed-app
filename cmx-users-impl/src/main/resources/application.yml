@@ -17,3 +17,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+springdoc:
+  api-docs:
+    resolve-schema-properties: true
+    path: /api
+  swagger-ui:
+    path: /api/doc
+    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true

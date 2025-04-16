@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "ocu_user_role",
                joinColumns = @JoinColumn(name = "user_login"),
