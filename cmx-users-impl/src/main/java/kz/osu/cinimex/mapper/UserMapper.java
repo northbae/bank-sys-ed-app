@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserMapper {
 
     @Mapping(target = "roles", ignore = true)
-    User userDtoToUser(UserDto UserDto);
+    User userDtoToUser(UserDto userDto);
 
     @Mapping(target = "roles", source = "roles", qualifiedByName = "roleToRoleName")
     UserDto userToUserDto(User user);
