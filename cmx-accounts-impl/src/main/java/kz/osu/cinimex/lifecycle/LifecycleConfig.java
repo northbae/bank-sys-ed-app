@@ -1,7 +1,7 @@
 package kz.osu.cinimex.lifecycle;
 
-import kz.osu.cinimex.entity.AccountEvent;
-import kz.osu.cinimex.entity.AccountState;
+import kz.osu.cinimex.model.enums.AccountEvent;
+import kz.osu.cinimex.model.enums.AccountState;
 import kz.osu.cinimex.lifecycle.actions.ChangeDocumentStatusAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.EnumSet;
 
 @Configuration
-@EnableStateMachineFactory
 @RequiredArgsConstructor
+@EnableStateMachineFactory
 public class LifecycleConfig extends StateMachineConfigurerAdapter<AccountState, AccountEvent> {
 
     private final ChangeDocumentStatusAction changeDocumentStatusAction;
@@ -24,7 +24,7 @@ public class LifecycleConfig extends StateMachineConfigurerAdapter<AccountState,
     public void configure(final StateMachineStateConfigurer<AccountState, AccountEvent> states) throws Exception {
         states
                 .withStates()
-                .initial(AccountState.REQUESTED_BY_USER)
+                .initial(AccountState.NONE)
                 .end(AccountState.REQUEST_REJECTED)
                 .end(AccountState.REQUEST_REJECTED_BY_CFT)
                 .end(AccountState.BLOCKED)
@@ -42,6 +42,13 @@ public class LifecycleConfig extends StateMachineConfigurerAdapter<AccountState,
     @Override
     public void configure(final StateMachineTransitionConfigurer<AccountState, AccountEvent> transitions) throws Exception {
         transitions
+                .withExternal()
+                .source(AccountState.NONE)
+                .target(AccountState.REQUESTED_BY_USER)
+                .event(AccountEvent.CREATE)
+                .action(changeDocumentStatusAction)
+
+                .and()
                 .withExternal()
                 .source(AccountState.REQUESTED_BY_USER)
                 .target(AccountState.REQUEST_SENT_TO_CFT)

@@ -1,8 +1,8 @@
 package kz.osu.cinimex.lifecycle.actions;
 
-import kz.osu.cinimex.entity.AccountEvent;
-import kz.osu.cinimex.entity.AccountState;
-import kz.osu.cinimex.entity.AccountStatusHistory;
+import kz.osu.cinimex.model.enums.AccountEvent;
+import kz.osu.cinimex.model.enums.AccountState;
+import kz.osu.cinimex.model.entity.AccountStatusHistory;
 import kz.osu.cinimex.lifecycle.event.AbstractEvent;
 import kz.osu.cinimex.repository.AccountRepository;
 import kz.osu.cinimex.repository.AccountStatusHistoryRepository;
@@ -12,7 +12,9 @@ import org.springframework.statemachine.action.Action;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class ChangeDocumentStatusAction implements Action<AccountState, AccountEvent> {
 
@@ -30,7 +32,7 @@ public class ChangeDocumentStatusAction implements Action<AccountState, AccountE
                     accountStatusHistoryRepository.save(new AccountStatusHistory()
                             .setStatus(newStatus)
                             .setCreatedAt(LocalDateTime.now(ZoneOffset.UTC))
-                            .setCreatedBy("system")
+                            .setCreatedBy(event.getInitiator())
                             .setAccount(account));
                 });
     }
