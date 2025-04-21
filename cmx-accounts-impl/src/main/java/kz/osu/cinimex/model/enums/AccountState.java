@@ -1,6 +1,7 @@
-package kz.osu.cinimex.entity;
+package kz.osu.cinimex.model.enums;
 
 public enum AccountState {
+    NONE("None"),
     REQUESTED_BY_USER("Запрошено открытие счета"),
     REQUEST_SENT_TO_CFT("Внутренние проверки банк"),
     CHECKS_STARTED("Внутренние проверки банка"),

@@ -1,4 +1,4 @@
-package kz.osu.cinimex.entity;
+package kz.osu.cinimex.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
