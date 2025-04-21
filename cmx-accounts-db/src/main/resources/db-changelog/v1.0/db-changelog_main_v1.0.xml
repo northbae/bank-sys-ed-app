@@ -6,5 +6,6 @@
     <include file="table-oca_account.xml" relativeToChangelogFile="true"/>
     <include file="table-oca_account_transaction.xml" relativeToChangelogFile="true"/>
     <include file="table-oca_account_status_history.xml" relativeToChangelogFile="true"/>
+    <include file="change-table-oca_account.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
