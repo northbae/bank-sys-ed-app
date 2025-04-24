@@ -25,10 +25,10 @@ public class LifecycleConfig extends StateMachineConfigurerAdapter<AccountState,
         states
                 .withStates()
                 .initial(AccountState.NONE)
-                .end(AccountState.REQUEST_REJECTED)
+                /*.end(AccountState.REQUEST_REJECTED)
                 .end(AccountState.REQUEST_REJECTED_BY_CFT)
                 .end(AccountState.BLOCKED)
-                .end(AccountState.CLOSED)
+                .end(AccountState.CLOSED)*/
                 .states(EnumSet.allOf(AccountState.class));
     }
 
@@ -74,6 +74,13 @@ public class LifecycleConfig extends StateMachineConfigurerAdapter<AccountState,
                 .source(AccountState.CHECKS_COMPLETED)
                 .target(AccountState.OPENED)
                 .event(AccountEvent.OPEN)
+                .action(changeDocumentStatusAction)
+
+                .and()
+                .withExternal()
+                .source(AccountState.OPENED)
+                .target(AccountState.REQUEST_SENT_TO_CFT)
+                .event(AccountEvent.START_CHECKS)
                 .action(changeDocumentStatusAction)
 
                 .and()

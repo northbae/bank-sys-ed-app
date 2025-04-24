@@ -1,9 +1,12 @@
 package kz.osu.cinimex.model.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum AccountState {
     NONE("None"),
     REQUESTED_BY_USER("Запрошено открытие счета"),
-    REQUEST_SENT_TO_CFT("Внутренние проверки банк"),
+    REQUEST_SENT_TO_CFT("Внутренние проверки банка"),
     CHECKS_STARTED("Внутренние проверки банка"),
     OPENED("Счет открыт"),
     CHECKS_COMPLETED("Проверки банка пройдены"),
@@ -13,9 +16,9 @@ public enum AccountState {
     BLOCKED("Счет заблокирован"),
     CLOSED("Счет закрыт");
 
-    public final String label;
+    private final String label;
 
-    private AccountState(String label) {
+    AccountState(String label) {
         this.label = label;
     }
 }
