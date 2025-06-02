@@ -2,9 +2,11 @@ package kz.osu.cinimex.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Schema(name = "roleDto", description = "Информация о роли")
 public class RoleDto {
     @Schema(description = "Название роли")
