@@ -29,9 +29,8 @@ public class AccountLifecycleService {
 
     public void sendEvent(AbstractEvent event) {
         // Получаем текущий статус счета, начальный статус-заглушка - NONE
-        final AccountState orderStatus = AccountState.valueOf(
-                accountRepository.findCurrentStatusById(event.getAccountId())
-                        .orElseThrow(() -> new IllegalStateException("Account status not found")));
+        final AccountState orderStatus = accountRepository.findCurrentStatusById(event.getAccountId())
+                .orElseThrow(() -> new IllegalStateException("Account status not found"));
         // Получаем экземпляр SM с нужным статусом
         final StateMachine<AccountState, AccountEvent> stateMachine = getStateMachine(orderStatus);
         // Помещаем событие в контекст

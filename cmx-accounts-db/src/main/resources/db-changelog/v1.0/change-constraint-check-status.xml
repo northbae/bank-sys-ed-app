@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="change-constraint_oca_account" author="Lena">
+        <sql>
+            ALTER TABLE oca_account DROP CONSTRAINT check_current_status;
+            ALTER TABLE oca_account ADD CONSTRAINT check_current_status CHECK
+            (current_status in
+            ('NONE', 'REQUESTED_BY_USER', 'REQUEST_SENT_TO_CFT', 'CHECKS_STARTED', 'CHECKS_COMPLETED',
+            'CHECKS_FAILED', 'REQUEST_REJECTED', 'REQUEST_REJECTED_BY_CFT', 'OPENED', 'BLOCKED', 'CLOSED'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="change-constraint_oca_account_status_history" author="Lena">
+        <sql>
+            ALTER TABLE oca_account_status_history DROP CONSTRAINT check_status;
+            ALTER TABLE oca_account_status_history ADD CONSTRAINT check_status CHECK
+            (status in
+            ('NONE', 'REQUESTED_BY_USER', 'REQUEST_SENT_TO_CFT', 'CHECKS_STARTED', 'CHECKS_COMPLETED',
+            'CHECKS_FAILED', 'REQUEST_REJECTED', 'REQUEST_REJECTED_BY_CFT', 'OPENED', 'BLOCKED', 'CLOSED'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
