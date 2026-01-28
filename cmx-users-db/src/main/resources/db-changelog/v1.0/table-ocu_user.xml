@@ -1,0 +1,42 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-ocu-user" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
+            <not>
+                <tableExists tableName="ocu_user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="ocu_user" remarks="Пользователь">
+            <column name="login" type="varchar(255)" remarks="Логин пользователя">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="last_name" type="varchar(255)" remarks="Фамилия">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)" remarks="Имя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)" remarks="Почта">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar(255)" remarks="Телефон"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-ocu-user-index" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Индекс существует">
+            <not>
+                <indexExists tableName="ocu_user" indexName="idx_last_name_first_name"
+                  columnNames="last_name, first_name"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_last_name_first_name" tableName="ocu_user">
+            <column name="last_name"/>
+            <column name="first_name"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
