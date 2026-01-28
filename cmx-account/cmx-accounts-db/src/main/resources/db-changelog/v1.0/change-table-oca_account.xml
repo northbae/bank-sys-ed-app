@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="add-column-is_rejected_by_user" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица не существует">
+            <tableExists tableName="oca_account"/>
+        </preConditions>
+        <addColumn tableName="oca_account">
+            <column name="is_rejected_by_user" type="boolean" remarks="Клиент решил отказаться от открытия счета"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="change-nullable-column-open_date" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица не существует">
+            <tableExists tableName="oca_account"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="oca_account" columnName="open_date" columnDataType="date"/>
+    </changeSet>
+
+</databaseChangeLog>
