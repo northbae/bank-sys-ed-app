@@ -1,0 +1,40 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="table-occ_card_status_history" author="Lena">
+        <preConditions onFail="MARK_RAN" onFailMessage="Таблица существует">
+            <not>
+                <tableExists tableName="occ_card_status_history"/>
+            </not>
+        </preConditions>
+        <createTable tableName="occ_card_status_history" remarks="История изменений статутов карты">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()" remarks="Уникальный идентификатор">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="status" type="varchar(30)" remarks="Присвоенный статус">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" remarks="Время создания записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(255)" remarks="Пользователь, создавший запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_id" type="uuid" remarks="Ссылка на карту occ_card.id">
+                <constraints nullable="false" foreignKeyName="occ_status_history_id_card_id" references="occ_card(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-check-constraint-status" author="Lena">
+        <sql>
+            ALTER TABLE occ_card_status_history ADD CONSTRAINT check_status CHECK
+            (status in
+            ('REQUESTED_BY_USER', 'REQUEST_SENT_TO_CFT', 'CHECKS_STARTED', 'CHECKS_COMPLETED',
+            'CHECKS_FAILED', 'REQUEST_REJECTED', 'REQUEST_REJECTED_BY_CFT', 'OPENED', 'BLOCKED', 'CLOSED'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
